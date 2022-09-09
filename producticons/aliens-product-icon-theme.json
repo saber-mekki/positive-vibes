@@ -1,0 +1,15 @@
+{
+  "fonts": [
+    {
+      "id": "alien-font",
+      "src": [
+        {
+          "path": "./editMonitic.png",
+          "format": "svg"
+        }
+      ],
+      "weight": "normal",
+      "style": "normal"
+    }
+  ]
+}

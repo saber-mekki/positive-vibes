@@ -1,30 +1,32 @@
 import * as vscode from "vscode";
+import axios from "axios";
 var cron = require("node-cron");
 
-const postivesVibeData = [
-  "No bad vibes",
-  "Let it challenge you to change you!",
-  "Let your thoughts go. Why focus on something you can’t control?",
-  "Do life with love!",
-  "Stop when you’re happy with what you’ve achieved!",
-  "Everyday is a day to be happy!",
+var positivesVibeData = [
+	"No bad vibes",
+	"Let it challenge you to change you!",
+	"Let your thoughts go. Why focus on something you can’t control?",
+	"Do life with love!",
+	"Stop when you’re happy with what you’ve achieved!",
+	"Everyday is a day to be happy!",
 ];
 
-export function activate(context: vscode.ExtensionContext) {
-  console.log('Congratulations, your extension "positive-vibe" is now active!');
+export async function activate(context: vscode.ExtensionContext) {
 
-  let disposable = vscode.commands.registerCommand(
-    "positive-vibe.helloWorld",
-    () => {
-      cron.schedule("* * * * *", () => {
-        vscode.window.showInformationMessage(
-          postivesVibeData[Math.floor(Math.random() * postivesVibeData.length)]
-        );
-      });
-    }
-  );
+	const res = await axios.get("https://zenquotes.io/api/quotes");
+	const quotes = res.data.map((el: any) => el.q);
 
-  context.subscriptions.push(disposable);
+	positivesVibeData.push(...quotes);
+
+	let disposable = vscode.commands.registerCommand("positive-vibes", () => {
+		cron.schedule("* * * * *", () => {
+			vscode.window.showInformationMessage(
+				positivesVibeData[Math.floor(Math.random() * positivesVibeData.length)]
+			);
+		});
+	});
+
+	context.subscriptions.push(disposable);
 }
 
 export function deactivate() {}
